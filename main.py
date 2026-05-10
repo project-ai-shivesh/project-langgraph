@@ -12,7 +12,7 @@ LAST = -1
 
 
 def should_continue(state: MessagesState) -> str:
-    if not state["messages"]:
+    if not state["messages"][LAST].tool_calls:
         return END
     return ACT
 
@@ -26,7 +26,7 @@ flow.add_node(AGENT_REASON, run_agent_reasoning)
 flow.add_node(ACT, tool_node)
 
 #Adding Edges
-flow.add_edge(START, AGENT_REASON)
+#flow.add_edge(START, AGENT_REASON)
 flow.add_conditional_edges(AGENT_REASON,should_continue, {
     END:END,
     ACT:ACT})
@@ -36,11 +36,8 @@ flow.add_edge(ACT, AGENT_REASON)
 app = flow.compile()
 app.get_graph().draw_mermaid_png(output_file_path="flow.png")
 
-
-
-def main():
-    print("Hello from project-langgraph!")
-
-
 if __name__ == "__main__":
-    main()
+    print("Hello from Project-LangGraph!")
+    res = app.invoke(
+        {"messages": [HumanMessage(content="What is the temperature in Boston? List it and then triple it.")]})
+    print(res["messages"][LAST].content)
