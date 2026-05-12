@@ -25,6 +25,6 @@ generation_prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-llm = ChatOpenAI()
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 generate_chain = generation_prompt | llm
 reflect_chain = reflection_prompt | llm
